@@ -1,25 +1,34 @@
 ---
 name: content-sdk-component-scaffold
-description: Creates new Sitecore components under src/components/. Pages Router; map auto-regenerates on dev/build.
+description: Creates new Sitecore components with correct file structure, props interface, and placement under src/components/. Use when adding a new component from scratch or scaffolding a component. Pages Router: register in .sitecore/component-map.ts only.
 ---
 
-# Component scaffold (Pages Router)
+# Content SDK Component Scaffold (Pages Router)
 
-**Detail:** [AGENTS-router-specifics.md#component-map-and-layout](../../docs/AGENTS-router-specifics.md#component-map-and-layout)
-**Read first:** `src/components/`
+Scaffold new Sitecore components so they integrate with the layout and editing pipeline. This app uses Pages Router with a single component map.
 
-## When
+## When to Use
 
-- Adding a new Sitecore component from scratch
-- User asks for component file structure or props
+- User asks to add a new Sitecore component, create a component from scratch, or scaffold a component.
+- Task involves creating a new React component that will be rendered from Sitecore layout/placeholders.
+- User mentions "new component," "add component," or "component file structure."
 
-## Rules
+## How to perform
 
-- Place components under `src/components/`
-- Map regenerates during `npm run dev` / `npm run build`; run `npm run sitecore-tools:generate-map` if dev is not running
+- Create a new file under `src/components/` (or existing feature folder). Define props (fields, params), export a single default component. Register in `.sitecore/component-map.ts` (content-sdk-component-registration). Run `npm run build` to verify.
 
-## Stop
+## Hard Rules
 
-- Stop if unclear whether component needs client-side interactivity
+- Place components under `src/components/`. Use existing folder conventions.
+- Define a props interface with the component's fields (e.g. `fields: { title: Field; ... }`) and any params. Use types from `@sitecore-content-sdk/react` or the app's types.
+- Export a single default component; one component per file unless the app pattern differs.
+- After creating the component file, register it in `.sitecore/component-map.ts` (see content-sdk-component-registration). Do not leave the component unregistered. Pages Router has a single map used by getComponentData and editing API routes.
 
-Docs: [Content SDK](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).
+## Stop Conditions
+
+- Do not create components in `.next/`, `node_modules/`, or build output.
+
+## References
+
+- [AGENTS.md](../../../AGENTS.md) for app structure and component map.
+- [Skills.md](../../../Skills.md) for capability map. [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).

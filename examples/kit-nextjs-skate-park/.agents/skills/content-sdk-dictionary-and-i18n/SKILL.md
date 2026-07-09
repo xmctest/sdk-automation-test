@@ -1,23 +1,35 @@
 ---
 name: content-sdk-dictionary-and-i18n
-description: Next.js i18n via next.config.js; locale from context.locale in data methods.
+description: Dictionary and i18n for Pages Router: Next.js i18n in next.config.js (i18n.locales, defaultLocale). Per-request locale is context.locale in getStaticProps/getServerSideProps. Fetch dictionary with client.getDictionary({ site: page.siteName, locale: page.locale }) after getPage. Use when adding or changing translated content or locale behavior.
 ---
 
-# Dictionary and i18n (Pages Router)
+# Content SDK Dictionary and i18n (Pages Router)
 
-**Detail:** [AGENTS-router-specifics.md#i18n-pages-router](../../docs/AGENTS-router-specifics.md#i18n-pages-router)
+This app uses **Next.js built-in i18n**. There is no [locale] in the URL path; locale is provided by Next.js as `context.locale` in getStaticProps/getServerSideProps.
 
-## When
+## When to Use
 
-- i18n locales, dictionary, or context.locale issues
+- User asks to add or change translated content, locale, or dictionary.
+- Task involves getDictionary, Next.js i18n, or context.locale.
+- User mentions "dictionary," "i18n," "locale," or "translation."
 
-## Rules
+## How to perform
 
-- `next.config.js` → `i18n.locales` / `defaultLocale` aligned with Sitecore
-- Always pass `context.locale` to `client.getPage`
+- Locales: `next.config.js` → i18n.locales, defaultLocale. In getStaticProps/getServerSideProps use context.locale; after getPage use client.getDictionary({ site: page.siteName, locale: page.locale }). Use a single getDictionary per request. Do not assume locale from headers.
 
-## Stop
+## Hard Rules
 
-- Stop if assuming locale from headers instead of `context.locale`
+- **Config:** `next.config.js` → `i18n.locales` and `i18n.defaultLocale`. Match (or subset) Sitecore languages.
+- **Per-request locale:** Use `context.locale` in getStaticProps and getServerSideProps. Pass it to `client.getPage(path, { locale: context.locale })`. After fetching the page, use `page.siteName` and `page.locale` (or `context.locale`) for `client.getDictionary({ site: page.siteName, locale: page.locale })` and for getComponentData.
+- Align locales in next.config.js with Sitecore languages (e.g. from sitecore.config.ts defaultLanguage). Use a single client.getDictionary per request for the active site/locale.
+- **Do not** assume locale from headers or a different source; always use `context.locale` and the page's site/locale for Sitecore calls.
 
-Docs: [Content SDK](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).
+## Stop Conditions
+
+- Stop if adding a new locale without confirming it exists in Sitecore and in next.config.js i18n.
+- Do not duplicate dictionary fetching without a clear need; prefer one fetch per request in the catch-all page.
+
+## References
+
+- [AGENTS.md](../../../AGENTS.md) for Next.js i18n and getDictionary usage.
+- [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).
