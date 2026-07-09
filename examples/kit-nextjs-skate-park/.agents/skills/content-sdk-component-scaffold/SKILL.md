@@ -1,26 +1,38 @@
 ---
 name: content-sdk-component-scaffold
-description: Creates Sitecore components under src/components/. App Router; server/client maps auto-regenerate.
+description: Creates new Sitecore components with correct file structure, props interface, and placement under src/components/. Use when adding a new component from scratch or scaffolding a component. App Router: decide Server vs Client and register in the appropriate map.
 ---
 
-# Component scaffold (App Router)
+# Content SDK Component Scaffold (App Router)
 
-**Detail:** [AGENTS-router-specifics.md#component-maps-and-layout](../../docs/AGENTS-router-specifics.md#component-maps-and-layout)
-**Read first:** `src/components/`
+Scaffold new Sitecore components so they integrate with the layout and editing pipeline. This app uses App Router with separate server and client component maps.
 
-## When
+## When to Use
 
-- Adding a new Sitecore component
-- Choosing Server vs Client (`use client`)
+- User asks to add a new Sitecore component, create a component from scratch, or scaffold a component.
+- Task involves creating a new React component that will be rendered from Sitecore layout/placeholders.
+- User mentions "new component," "add component," or "component file structure."
 
-## Rules
+## How to perform
 
-- Place under `src/components/`
-- Server → server map; Client → client map (generator picks by `use client`)
-- Run `npm run sitecore-tools:generate-map` if dev is not running
+- Create a new file under `src/components/` (or existing feature folder). Define props (fields, params), export a single default component.
+- Decide Server vs Client: default Server; add `'use client'` only if the component needs hooks or event handlers.
+- Register the component in the correct map (content-sdk-component-registration). Run `npm run build` to verify.
 
-## Stop
+## Hard Rules
 
-- Stop if unclear Server vs Client — follow app convention
+- Place components under `src/components/`. Use existing folder conventions.
+- Define a props interface with the component's fields (e.g. `fields: { title: Field; ... }`) and any params. Use types from `@sitecore-content-sdk/react` or the app's types.
+- Export a single default component; one component per file unless the app pattern differs.
+- **Server vs Client:** Use Server Components by default. Add `'use client'` only for interactivity (hooks, event handlers). Register Server components in `.sitecore/component-map.ts`; Client components in `.sitecore/component-map.client.ts`.
+- After creating the component file, register it in the correct component map (see content-sdk-component-registration). Do not leave the component unregistered.
 
-Docs: [Content SDK](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).
+## Stop Conditions
+
+- Stop and ask if the component should be a Server or Client Component when the app does not have a clear convention.
+- Do not create components in `.next/`, `node_modules/`, or build output.
+
+## References
+
+- [AGENTS.md](../../../AGENTS.md) for app structure and component maps.
+- [Skills.md](../../../Skills.md) for capability map. [Official Content SDK docs](https://doc.sitecore.com/sai/en/developers/content-sdk/sitecore-content-sdk-for-sitecoreai.html).
