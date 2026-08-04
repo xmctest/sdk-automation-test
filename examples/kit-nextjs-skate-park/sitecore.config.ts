@@ -5,7 +5,6 @@ import { defineConfig } from '@sitecore-content-sdk/nextjs/config';
  * https://doc.sitecore.com/xmc/en/developers/content-sdk/the-sitecore-configuration-file.html
  */
 export default defineConfig({
-  generateStaticPaths: true,
   redirects: {
     // Routes live under a [locale] segment (src/app/[site]/[locale]),
     // so redirect targets must include the locale prefix to resolve.
