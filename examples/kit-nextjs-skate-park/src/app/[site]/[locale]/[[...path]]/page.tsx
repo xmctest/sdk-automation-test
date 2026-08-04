@@ -11,6 +11,8 @@ import Providers from 'src/Providers';
 import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 
+export const revalidate = 60;
+
 type PageProps = {
   params: Promise<{ site: string; locale: string; path?: string[]; [key: string]: string | string[] | undefined }>;
 };
