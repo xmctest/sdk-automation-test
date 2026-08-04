@@ -37,7 +37,9 @@
     "next": "^16.2.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
-    "next-intl": "^4.3.5"
+    "next-intl": "^4.3.5",
+    "rsc-env": "^0.0.2",
+    "tailwind-bootstrap-grid": "^6.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
