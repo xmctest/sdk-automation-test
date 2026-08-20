@@ -1,0 +1,20 @@
+---
+description: Sitecore development patterns for your App Router project
+alwaysApply: false
+globs:
+  - 'src/app/**'
+  - 'src/components/**'
+  - 'src/lib/**'
+  - 'sitecore.config.ts'
+  - '**/*sitecore*'
+---
+
+# Sitecore (App Router)
+
+- **Data:** Server Components + `SitecoreClient` in `src/lib/sitecore-client.ts`; preview via `draftMode()` + `getPreview` / `getDesignLibraryData`
+- **Routing:** single catch-all `src/app/[site]/[locale]/[[...path]]/page.tsx`; `await params`; `setRequestLocale(\`${site}_${locale}\`)`
+- **Fields:** use `<Text>`, `<RichText>`, `<Image>`, `<Link>`; validate before render
+- **Maps:** `.sitecore/component-map.ts` + `.sitecore/component-map.client.ts` auto-generated from `src/components/`
+- **Config:** env-only in `sitecore.config.ts`; document vars in `.env.example`
+
+Depth: [`.agents/docs/`](../../.agents/docs/) · skill: [content-sdk-field-usage-image-link-text](../../.agents/skills/content-sdk-field-usage-image-link-text/SKILL.md)
