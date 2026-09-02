@@ -43,6 +43,7 @@
     "@netlify/functions": "^6.0.0",
     "@ngx-translate/core": "^17.0.0",
     "@sitecore-content-sdk/angular": "0.3.0-canary.20260901134120",
+    "@sitecore-content-sdk/nextjs": "canary",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "rxjs": "~7.8.0",
