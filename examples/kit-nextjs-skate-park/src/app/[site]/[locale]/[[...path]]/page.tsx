@@ -1,8 +1,10 @@
 import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
 import { notFound } from 'next/navigation';
 import { draftMode, headers as nextHeaders } from 'next/headers';
+import { Metadata } from 'next';
+import { getPageMetadata } from '@sitecore-content-sdk/nextjs';
 import client from 'src/lib/sitecore-client';
-import Layout, { RouteFields } from 'src/Layout';
+import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
@@ -49,12 +51,10 @@ export default async function Page({ params }: PageProps) {
 }
 
 // Metadata fields for the page.
-export const generateMetadata = async ({ params }: PageProps) => {
+export const generateMetadata = async ({ params }: PageProps): Promise<Metadata> => {
   const { path, site, locale } = await params;
 
   // The same call as for rendering the page. Should be cached by default react behavior
   const page = await client.getPage(path ?? [], { site, locale });
-  return {
-    title: (page?.layout.sitecore.route?.fields as RouteFields)?.Title?.value?.toString() || 'Page',
-  };
+  return getPageMetadata(page?.layout.sitecore.route);
 };
