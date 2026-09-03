@@ -28,10 +28,10 @@
     "start": "cross-env-shell NODE_ENV=production npm-run-all --serial build next:start"
   },
   "dependencies": {
-    "@sitecore-content-sdk/analytics-core": "2.1.3-canary.20260901134120",
-    "@sitecore-content-sdk/events": "2.1.3-canary.20260901134120",
-    "@sitecore-content-sdk/nextjs": "2.4.0-canary.20260901134120",
-    "@sitecore-content-sdk/personalize": "2.1.1-canary.20260901134120",
+    "@sitecore-content-sdk/analytics-core": "2.1.3-canary.20260902193616",
+    "@sitecore-content-sdk/events": "2.1.3-canary.20260902193616",
+    "@sitecore-content-sdk/nextjs": "2.4.0-canary.20260902193616",
+    "@sitecore-content-sdk/personalize": "2.1.1-canary.20260902193616",
     "@sitecore-feaas/clientside": "^0.6.0",
     "@sitecore/components": "~2.1.0",
     "next": "^16.2.0",
@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@sitecore-content-sdk/cli": "2.3.0-canary.20260901134120",
+    "@sitecore-content-sdk/cli": "2.3.0-canary.20260902193616",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",
