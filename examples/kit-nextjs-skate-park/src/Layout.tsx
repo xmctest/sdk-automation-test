@@ -3,8 +3,9 @@
  */
 import { JSX } from 'react';
 import Head from 'next/head';
-import { Placeholder, DesignLibrary, Page } from '@sitecore-content-sdk/nextjs';
-import SitecoreHead from 'src/SitecoreHead';
+import { Placeholder, DesignLibrary, Page, PageMetaTags } from '@sitecore-content-sdk/nextjs';
+import Scripts from 'src/Scripts';
+import SitecoreStyles from 'src/components/content-sdk/SitecoreStyles';
 
 interface LayoutProps {
   page: Page;
@@ -17,7 +18,9 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
 
   return (
     <>
-      <SitecoreHead page={page} />
+      <Scripts />
+      <SitecoreStyles layoutData={layout} />
+      <PageMetaTags route={route} />
       <Head>
         <link rel="icon" href="/favicon.ico" />
       </Head>
