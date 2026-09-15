@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, LinkField, TextField } from '@sitecore-content-sdk/nextjs';
+import { Text, LinkField } from '@sitecore-content-sdk/nextjs';
 import { CompatibleLink } from 'components/content-sdk/CompatibleLink';
 import { getDatasource } from 'lib/component-props';
 import { LinkListItemProps, LinkListProps } from './link-list.props';

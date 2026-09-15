@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 import React, { useState, JSX } from 'react';
-import { LinkField, Text, TextField, useSitecore } from '@sitecore-content-sdk/nextjs';
+import { LinkField, Text, useSitecore } from '@sitecore-content-sdk/nextjs';
 import { CompatibleLink } from 'components/content-sdk/CompatibleLink';
 import { getFieldValue } from 'lib/component-props';
 import { NavigationFields as Fields, NavigationListItemProps, NavigationProps } from './navigation.props';

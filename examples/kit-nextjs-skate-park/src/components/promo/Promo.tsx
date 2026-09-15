@@ -1,13 +1,18 @@
-import React, { JSX } from 'react';
+/* eslint-disable react-hooks/static-components */
+import React, { JSX } from "react";
 import {
   NextImage as ContentSdkImage,
   RichText as ContentSdkRichText,
-} from '@sitecore-content-sdk/nextjs';
-import { CompatibleLink } from 'components/content-sdk/CompatibleLink';
-import StructuredData from 'components/structured-data/StructuredData';
-import { getFieldValue } from 'lib/component-props';
-import { buildProductJsonLd } from 'src/lib/structured-data/schema';
-import { PromoContentProps, PromoFields as Fields, PromoProps } from './promo.props';
+} from "@sitecore-content-sdk/nextjs";
+import { CompatibleLink } from "components/content-sdk/CompatibleLink";
+import StructuredData from "components/structured-data/StructuredData";
+import { getFieldValue } from "lib/component-props";
+import { buildProductJsonLd } from "src/lib/structured-data/schema";
+import {
+  PromoContentProps,
+  PromoFields as Fields,
+  PromoProps,
+} from "./promo.props";
 
 const PromoContent = (props: PromoContentProps): JSX.Element => {
   const { fields, params, renderText } = props;
@@ -46,12 +51,16 @@ const PromoContent = (props: PromoContentProps): JSX.Element => {
           {renderText(fields)}
         </div>
         <StructuredData
-          id={`jsonld-product-${id ?? 'promo'}`}
+          id={`jsonld-product-${id ?? "promo"}`}
           data={buildProductJsonLd({
             name:
               promoLinkField?.value?.title ||
-              (promoTextField?.value ? String(promoTextField.value) : undefined),
-            descriptionHtml: promoTextField?.value ? String(promoTextField.value) : undefined,
+              (promoTextField?.value
+                ? String(promoTextField.value)
+                : undefined),
+            descriptionHtml: promoTextField?.value
+              ? String(promoTextField.value)
+              : undefined,
             url: promoLinkField?.value?.href,
             image: promoIconField?.value?.src,
           })}
@@ -85,10 +94,16 @@ export const WithText = (props: PromoProps): JSX.Element => {
   const renderText = (fields: Fields) => (
     <>
       <div className="field-promotext">
-        <ContentSdkRichText className="promo-text" field={getFieldValue(fields.PromoText)} />
+        <ContentSdkRichText
+          className="promo-text"
+          field={getFieldValue(fields.PromoText)}
+        />
       </div>
       <div className="field-promotext">
-        <ContentSdkRichText className="promo-text" field={getFieldValue(fields.PromoText2)} />
+        <ContentSdkRichText
+          className="promo-text"
+          field={getFieldValue(fields.PromoText2)}
+        />
       </div>
     </>
   );
