@@ -1,4 +1,3 @@
-'use client';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 /**
  * You can import your own client components here
