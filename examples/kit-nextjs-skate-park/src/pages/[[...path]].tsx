@@ -27,9 +27,12 @@ const SitecorePage = ({ page, notFound, componentProps }: SitecorePageProps): JS
   }
 
   return (
-    <Providers componentProps={componentProps} page={page}>
-      <Layout page={page} />
-    </Providers>
+    <>
+      <h2>SSG BASED PAGE</h2>
+      <Providers componentProps={componentProps} page={page}>
+        <Layout page={page} />
+      </Providers>
+    </>
   );
 };
 
