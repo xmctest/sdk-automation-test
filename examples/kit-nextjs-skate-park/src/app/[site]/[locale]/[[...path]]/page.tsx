@@ -1,13 +1,16 @@
 import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
+import { setCachedPageParams, getPageMetadata } from '@sitecore-content-sdk/nextjs';
 import { notFound } from 'next/navigation';
 import { draftMode } from 'next/headers';
+import { Metadata } from 'next';
 import { SiteInfo } from '@sitecore-content-sdk/nextjs';
 import sites from '.sitecore/sites.json';
 import { routing } from 'src/i18n/routing';
 import scConfig from 'sitecore.config';
 import client from 'src/lib/sitecore-client';
 import { getSitecorePage } from 'src/lib/cache/get-sitecore-page';
-import Layout, { RouteFields } from 'src/Layout';
+import { BUILD_VALIDATION_SITE, isBuildValidationSite } from 'src/lib/sitecore-build-validation';
+import Layout from 'src/Layout';
 import Providers from 'src/Providers';
 import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
@@ -20,37 +23,33 @@ type PageProps = {
 export default async function Page({ params, searchParams }: PageProps) {
   const { site, locale, path } = await params;
 
-  // Cached fetch first so missing routes can notFound() without dynamic APIs in the ancestor tree.
-  const cachedPage = await getSitecorePage({ site, locale, path: path ?? [] });
-
-  if (!cachedPage) {
+  if (isBuildValidationSite(site)) {
+    setCachedPageParams({ site, locale });
     notFound();
   }
 
   // Set site and locale to be available in src/i18n/request.ts for fetching the dictionary
   setRequestLocale(`${site}_${locale}`);
 
+  // Draft/preview first so editing is not blocked by locale-dependent cached lookups.
+  // Editing often resolves language via query string, while [locale] may fall back to defaultLanguage.
   const draft = await draftMode();
 
-  // Fetch the page data from Sitecore
   let page;
-  try {
-    if (draft.isEnabled) {
-      const editingParams = await searchParams;
-      if (isDesignLibraryPreviewData(editingParams)) {
-        page = await client.getDesignLibraryData(editingParams);
-      } else {
-        page = await client.getPreview(editingParams);
-      }
+  if (draft.isEnabled) {
+    const editingParams = await searchParams;
+    if (isDesignLibraryPreviewData(editingParams)) {
+      page = await client.getDesignLibraryData(editingParams);
     } else {
-      page = cachedPage;
+      page = await client.getPreview(editingParams);
     }
-  } catch {
-    page = null;
+  } else {
+    page = await getSitecorePage({ site, locale, path: path ?? [] });
   }
 
   // If the page is not found, return a 404
   if (!page) {
+    setCachedPageParams({ site, locale });
     notFound();
   }
 
@@ -67,48 +66,40 @@ export default async function Page({ params, searchParams }: PageProps) {
 // pages for SSG ("paths", as tokenized array).
 export const generateStaticParams = async () => {
   if (process.env.NODE_ENV !== 'development' && scConfig.generateStaticPaths) {
-    try {
-      return await client.getAppRouterStaticParams(
-        sites.map((site: SiteInfo) => site.name),
-        routing.locales.slice()
-      );
-    } catch {
-      // Edge may be unavailable at build time (e.g. fresh environment).
-    }
+    return await client.getAppRouterStaticParams(
+      sites.map((site: SiteInfo) => site.name),
+      routing.locales.slice()
+    );
   }
-  // Next.js 16 requires at least one result
-  // Return a default param for the root page
   return [
     {
-      site: sites[0]?.name || 'default',
+      site: BUILD_VALIDATION_SITE,
       locale: routing.defaultLocale || scConfig.defaultLanguage,
       path: [],
     },
   ];
 };
 // Metadata fields for the page. Mirrors the Page draft-mode branching so the <title> matches the body.
-export const generateMetadata = async ({ params, searchParams }: PageProps) => {
+export const generateMetadata = async ({ params, searchParams }: PageProps): Promise<Metadata> => {
   const { path, site, locale } = await params;
+
+  if (isBuildValidationSite(site)) {
+    return { title: 'Page' };
+  }
 
   const draft = await draftMode();
 
   let page;
-  try {
-    if (draft.isEnabled) {
-      const editingParams = await searchParams;
-      if (isDesignLibraryPreviewData(editingParams)) {
-        page = await client.getDesignLibraryData(editingParams);
-      } else {
-        page = await client.getPreview(editingParams);
-      }
+  if (draft.isEnabled) {
+    const editingParams = await searchParams;
+    if (isDesignLibraryPreviewData(editingParams)) {
+      page = await client.getDesignLibraryData(editingParams);
     } else {
-      page = await getSitecorePage({ site, locale, path: path ?? [] });
+      page = await client.getPreview(editingParams);
     }
-  } catch {
-    page = null;
+  } else {
+    page = await getSitecorePage({ site, locale, path: path ?? [] });
   }
 
-  return {
-    title: (page?.layout.sitecore.route?.fields as RouteFields)?.Title?.value?.toString() || 'Page',
-  };
+  return getPageMetadata(page?.layout.sitecore.route);
 };

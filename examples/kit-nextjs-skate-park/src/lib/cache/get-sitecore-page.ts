@@ -15,13 +15,7 @@ export async function getSitecorePage(params: GetSitecorePageParams): Promise<Pa
   'use cache';
 
   const { site, locale, path } = params;
-
-  let page: Page | null;
-  try {
-    page = await client.getPage(path, { site, locale });
-  } catch {
-    return null;
-  }
+  const page = await client.getPage(path, { site, locale });
 
   const tags = collectSitecorePageCacheTags({
     site,

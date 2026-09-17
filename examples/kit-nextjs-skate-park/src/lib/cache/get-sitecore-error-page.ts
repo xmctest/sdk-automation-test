@@ -16,13 +16,7 @@ export async function getSitecoreErrorPage(params: GetSitecoreErrorPageParams): 
   'use cache';
 
   const { site, locale, code } = params;
-
-  let page: Page | null;
-  try {
-    page = await client.getErrorPage(code, { site, locale });
-  } catch {
-    return null;
-  }
+  const page = await client.getErrorPage(code, { site, locale });
 
   const sitecore = page?.layout?.sitecore;
   const itemPath = sitecore?.context?.itemPath;
