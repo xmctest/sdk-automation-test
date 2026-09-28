@@ -1,8 +1,14 @@
 'use client';
-
 import { JSX } from 'react';
-import { Text, RichText, withDatasourceCheck } from '@sitecore-content-sdk/nextjs';
-import { ContentBlockProps } from './content-block.props';
+import { Text, RichText, Field, withDatasourceCheck } from '@sitecore-content-sdk/nextjs';
+import { ComponentProps } from 'lib/component-props';
+
+type ContentBlockProps = ComponentProps & {
+  fields: {
+    heading: Field<string>;
+    content: Field<string>;
+  };
+};
 
 /**
  * A simple Content Block component, with a heading and rich text block.
@@ -10,11 +16,11 @@ import { ContentBlockProps } from './content-block.props';
  * Content SDK component that's useful.
  */
 const ContentBlock = ({ fields }: ContentBlockProps): JSX.Element => (
-  <section className="contentBlock">
-    <Text tag="h2" className="contentTitle" field={fields?.heading} />
+  <div className="contentBlock">
+    <Text tag="h2" className="contentTitle" field={fields.heading} />
 
-    <RichText className="contentDescription" field={fields?.content} />
-  </section>
+    <RichText className="contentDescription" field={fields.content} />
+  </div>
 );
 
 export default withDatasourceCheck()<ContentBlockProps>(ContentBlock);

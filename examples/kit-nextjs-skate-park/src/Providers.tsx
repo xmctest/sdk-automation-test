@@ -1,33 +1,18 @@
-import {
-  ComponentPropsCollection,
-  ComponentPropsContext,
-  Page,
-  SitecoreProvider,
-} from '@sitecore-content-sdk/nextjs';
-import components from '.sitecore/component-map';
+'use client';
+import React from 'react';
+import { Page, SitecoreProvider } from '@sitecore-content-sdk/nextjs';
 import scConfig from 'sitecore.config';
+import components from '.sitecore/component-map.client';
 
-const Providers = ({
-  children,
-  componentProps,
-  page,
-}: {
-  children: React.ReactNode;
-  componentProps?: ComponentPropsCollection;
-  page: Page;
-}) => {
+export default function Providers({ children, page }: { children: React.ReactNode; page: Page }) {
   return (
-    <ComponentPropsContext value={componentProps || {}}>
-      <SitecoreProvider
-        componentMap={components}
-        api={scConfig.api}
-        page={page}
-        loadImportMap={() => import('.sitecore/import-map')}
-      >
-        {children}
-      </SitecoreProvider>
-    </ComponentPropsContext>
+    <SitecoreProvider
+      api={scConfig.api}
+      componentMap={components}
+      page={page}
+      loadImportMap={() => import('.sitecore/import-map.client')}
+    >
+      {children}
+    </SitecoreProvider>
   );
-};
-
-export default Providers;
+}

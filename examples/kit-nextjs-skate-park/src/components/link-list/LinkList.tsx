@@ -1,10 +1,37 @@
-import React from 'react';
-import { Text, LinkField } from '@sitecore-content-sdk/nextjs';
-import { CompatibleLink } from 'components/content-sdk/CompatibleLink';
-import { getDatasource } from 'lib/component-props';
-import { LinkListItemProps, LinkListProps } from './link-list.props';
+import { Link as ContentSdkLink, Text, LinkField, TextField } from '@sitecore-content-sdk/nextjs';
+import { ComponentProps } from 'lib/component-props';
 
-const LinkListItem = ({ index, total, field }: LinkListItemProps) => {
+interface LinkListProps extends ComponentProps {
+  fields: {
+    /**
+     * The Integrated graphQL query result. This illustrates the way to access the datasource children.
+     */
+    data: {
+      datasource: {
+        children: {
+          results: Array<{
+            field: {
+              link: LinkField;
+            };
+          }>;
+        };
+        field: {
+          title: TextField;
+        };
+      };
+    };
+  };
+}
+
+const LinkListItem = ({
+  index,
+  total,
+  field,
+}: {
+  index: number;
+  total: number;
+  field: LinkField;
+}) => {
   const classNames = [
     `item${index}`,
     index % 2 === 0 ? 'odd' : 'even',
@@ -17,33 +44,29 @@ const LinkListItem = ({ index, total, field }: LinkListItemProps) => {
   return (
     <li className={classNames}>
       <div className="field-link">
-        <CompatibleLink field={field} />
+        <ContentSdkLink field={field} />
       </div>
     </li>
   );
 };
 
 export const Default = ({ params, fields }: LinkListProps) => {
-  const datasource = getDatasource(fields);
+  const datasource = fields?.data?.datasource;
   const styles = `component link-list ${params.styles || ''}`.trim();
   const id = params.RenderingIdentifier;
 
   const renderContent = () => {
-    const results = datasource?.children?.results;
-
-    if (!datasource || !Array.isArray(results)) {
+    if (!datasource) {
       return <h3>Link List</h3>;
     }
 
-    const links = results
-      .filter((element): element is typeof element & { field: { link: LinkField } } =>
-        Boolean(element?.field?.link)
-      )
+    const links = datasource.children.results
+      .filter((element) => element?.field?.link)
       .map((element, index) => (
         <LinkListItem
-          key={`${index}-${element.field.link.value?.href ?? index}`}
+          key={`${index}-${element.field?.link}`}
           index={index}
-          total={results.length}
+          total={datasource.children.results.length}
           field={element.field.link}
         />
       ));
@@ -57,8 +80,8 @@ export const Default = ({ params, fields }: LinkListProps) => {
   };
 
   return (
-    <aside className={styles} id={id}>
+    <div className={styles} id={id}>
       <div className="component-content">{renderContent()}</div>
-    </aside>
+    </div>
   );
 };

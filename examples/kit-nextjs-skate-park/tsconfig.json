@@ -13,51 +13,33 @@
       ],
       "assets/*": [
         "src/assets/*"
-      ]
+      ],
+      ".sitecore/*": [
+        ".sitecore/*"
+      ],
     },
-    "target": "es5",
-    "types": [
-      "node"
-    ],
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "target": "ES2017",
+    "types": ["node"],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
-    "strictFunctionTypes": false,
-    "downlevelIteration": true,
     "noEmit": true,
     "esModuleInterop": true,
+    "strictFunctionTypes": false,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react-jsx",
-    "allowSyntheticDefaultImports": true,
-    "noImplicitReturns": true,
-    "noImplicitAny": false,
-    "noImplicitThis": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    "jsx": "preserve",
     "incremental": true,
-    "forceConsistentCasingInFileNames": false,
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

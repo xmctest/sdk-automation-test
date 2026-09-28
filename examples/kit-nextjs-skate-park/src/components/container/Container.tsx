@@ -1,7 +1,14 @@
-import React, { JSX } from 'react';
+import { JSX } from 'react';
+import { ComponentProps } from 'lib/component-props';
 import componentMap from '.sitecore/component-map';
 import { AppPlaceholder } from "@sitecore-content-sdk/nextjs";
-import { ContainerProps } from './container.props';
+
+interface ContainerProps extends ComponentProps {
+  params: ComponentProps["params"] & {
+    BackgroundImage?: string;
+    DynamicPlaceholderId: string;
+  };
+}
 
 const Container = ({
   params,
@@ -30,7 +37,7 @@ const Container = ({
   }
 
   return (
-    <section className={`component container-default ${styles}`} id={id}>
+    <div className={`component container-default ${styles}`} id={id}>
       <div className="component-content" style={backgroundStyle}>
         <div className="row">
           <AppPlaceholder
@@ -41,7 +48,7 @@ const Container = ({
           />
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

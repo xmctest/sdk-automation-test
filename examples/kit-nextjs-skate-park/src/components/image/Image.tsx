@@ -1,21 +1,32 @@
-/* eslint-disable react-hooks/static-components */
 import {
+  Field,
+  ImageField,
   NextImage as ContentSdkImage,
+  Link as ContentSdkLink,
+  LinkField,
   Text,
 } from "@sitecore-content-sdk/nextjs";
 import React from "react";
-import { CompatibleLink } from "components/content-sdk/CompatibleLink";
-import { getFieldValue } from "lib/component-props";
-import { ImageProps, ImageWrapperProps } from "./image.props";
+import { ComponentProps } from "lib/component-props";
 
-const ImageWrapper: React.FC<ImageWrapperProps> = ({
-  className,
-  id,
-  children,
-}) => (
-  <figure className={className.trim()} id={id}>
+interface ImageFields {
+  Image: ImageField;
+  ImageCaption: Field<string>;
+  TargetUrl: LinkField;
+}
+
+interface ImageProps extends ComponentProps {
+  fields: ImageFields;
+}
+
+const ImageWrapper: React.FC<{
+  className: string;
+  id?: string;
+  children: React.ReactNode;
+}> = ({ className, id, children }) => (
+  <div className={className.trim()} id={id}>
     <div className="component-content">{children}</div>
-  </figure>
+  </div>
 );
 
 const ImageDefault: React.FC<ImageProps> = ({ params }) => (
@@ -26,82 +37,53 @@ const ImageDefault: React.FC<ImageProps> = ({ params }) => (
 
 export const Banner: React.FC<ImageProps> = ({ params, fields }) => {
   const { styles, RenderingIdentifier: id } = params;
-  const baseImageField = getFieldValue(fields?.Image);
-  const imageField = baseImageField && {
-    ...baseImageField,
+  const imageField = fields.Image && {
+    ...fields.Image,
     value: {
-      ...baseImageField.value,
+      ...fields.Image.value,
       style: { objectFit: "cover", width: "100%", height: "100%" },
     },
   };
 
-  const altText =
-    typeof baseImageField?.value?.alt === "string"
-      ? baseImageField.value.alt
-      : "Hero banner";
-
-  // Use pixel caps per breakpoint so the browser picks the next-lowest srcset width
-  // instead of 100vw (which with DPR can still request 1920px on ~1319px viewport).
-  // This fixes mobile/tablet overserving (e.g. 1920px image when displayed at 1319px).
-  const bannerSizes =
-    "(max-width: 640px) 100vw, (max-width: 768px) 768px, (max-width: 1024px) 1024px, (max-width: 1440px) 1280px, 1920px";
-
   return (
-    <figure
-      className={`component hero-banner ${styles}`.trim()}
-      id={typeof id === "string" ? id : undefined}
-    >
+    <div className={`component hero-banner ${styles}`.trim()} id={id}>
       <div className="component-content sc-sxa-image-hero-banner">
         <ContentSdkImage
           field={imageField}
           loading="eager"
           fetchPriority="high"
-          sizes={bannerSizes}
-          alt={altText}
         />
       </div>
-    </figure>
+    </div>
   );
 };
 
 export const Default: React.FC<ImageProps> = (props) => {
   const { fields, params, page } = props;
   const { styles, RenderingIdentifier: id } = params;
-  const imageField = getFieldValue(fields?.Image);
-  const imageCaptionField = getFieldValue(fields?.ImageCaption);
-  const targetUrlField = getFieldValue(fields?.TargetUrl);
 
   if (!fields) {
     return <ImageDefault {...props} />;
   }
 
-  const Image = () => (
-    <ContentSdkImage
-      field={imageField}
-      sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 90vw, 1200px"
-      alt={
-        typeof imageField?.value?.alt === "string" ? imageField.value.alt : ""
-      }
-    />
-  );
+  const Image = () => <ContentSdkImage field={fields.Image} />;
   const shouldWrapWithLink =
-    !page?.mode?.isEditing && targetUrlField?.value?.href;
+    !page.mode.isEditing && fields.TargetUrl?.value?.href;
 
   return (
-    <ImageWrapper
-      className={`component image ${styles}`}
-      id={typeof id === "string" ? id : undefined}
-    >
+    <ImageWrapper className={`component image ${styles}`} id={id}>
       {shouldWrapWithLink ? (
-        <CompatibleLink field={targetUrlField}>
+        <ContentSdkLink field={fields.TargetUrl}>
           <Image />
-        </CompatibleLink>
+        </ContentSdkLink>
       ) : (
         <Image />
       )}
-      <figcaption className="image-caption field-imagecaption">
-        <Text tag="span" field={imageCaptionField} />
-      </figcaption>
+      <Text
+        tag="span"
+        className="image-caption field-imagecaption"
+        field={fields.ImageCaption}
+      />
     </ImageWrapper>
   );
 };
