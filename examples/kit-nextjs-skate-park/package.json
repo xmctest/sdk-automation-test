@@ -16,13 +16,13 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@sitecore-content-sdk/analytics-core": "2.2.0-canary.20261104060918",
-    "@sitecore-content-sdk/events": "2.2.0-canary.20261104060918",
-    "@sitecore-content-sdk/nextjs": "3.0.0-canary.20261104060918",
-    "@sitecore-content-sdk/personalize": "2.2.0-canary.20261104060918",
+    "@sitecore-content-sdk/analytics-core": "2.2.0-canary.20261110134140",
+    "@sitecore-content-sdk/events": "2.2.0-canary.20261110134140",
+    "@sitecore-content-sdk/nextjs": "3.0.0-canary.20261110134140",
+    "@sitecore-content-sdk/personalize": "2.2.0-canary.20261110134140",
     "@sitecore-feaas/clientside": "^0.6.0",
     "@sitecore/components": "~2.1.0",
-    "@tailwindcss/postcss": "^4.3.4",
+    "@tailwindcss/postcss": "^4.3.5",
     "font-awesome": "^4.7.0",
     "next": "^16.2.0",
     "next-localization": "^0.12.0",
@@ -31,10 +31,10 @@
     "react-dom": "^19.2.1",
     "sharp": "^0.34.1",
     "tailwind-bootstrap-grid": "^6.0.0",
-    "tailwindcss": "^4.3.4"
+    "tailwindcss": "^4.3.5"
   },
   "devDependencies": {
-    "@sitecore-content-sdk/cli": "2.5.0-canary.20261104060918",
+    "@sitecore-content-sdk/cli": "2.5.0-canary.20261110134140",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",
