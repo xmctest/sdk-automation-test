@@ -1,14 +1,14 @@
 import { JSX } from 'react';
-import { AppPlaceholder, DesignLibraryApp, Field, Page } from '@sitecore-content-sdk/nextjs';
-import Scripts from 'src/Scripts';
-import SitecoreStyles from 'components/content-sdk/SitecoreStyles';
+import { DesignLibraryApp, Field, PageMetadataFields, Page } from '@sitecore-content-sdk/nextjs';
+import SitecoreHead from 'src/SitecoreHead';
+import LayoutPlaceholders from 'src/LayoutPlaceholders';
 import componentMap from '.sitecore/component-map';
 
 interface LayoutProps {
   page: Page;
 }
 
-export interface RouteFields {
+export interface RouteFields extends PageMetadataFields {
   [key: string]: unknown;
   Title?: Field;
 }
@@ -19,9 +19,7 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
   const mainClassPageEditing = mode.isEditing ? 'editing-mode' : 'prod-mode';
   return (
     <>
-      <Scripts />
-      <SitecoreStyles layoutData={layout} />
-      {/* root placeholder for the app, which we add components to using route data */}
+      <SitecoreHead page={page} />
       <div className={mainClassPageEditing}>
         {mode.isDesignLibrary ? (
           route && (
@@ -33,44 +31,7 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
             />
           )
         ) : (
-          <>
-            <header>
-              <div id="header">
-                {route && (
-                  <AppPlaceholder
-                    page={page}
-                    componentMap={componentMap}
-                    name="headless-header"
-                    rendering={route}
-                  />
-                )}
-              </div>
-            </header>
-            <main>
-              <div id="content">
-                {route && (
-                  <AppPlaceholder
-                    page={page}
-                    componentMap={componentMap}
-                    name="headless-main"
-                    rendering={route}
-                  />
-                )}
-              </div>
-            </main>
-            <footer>
-              <div id="footer">
-                {route && (
-                  <AppPlaceholder
-                    page={page}
-                    componentMap={componentMap}
-                    name="headless-footer"
-                    rendering={route}
-                  />
-                )}
-              </div>
-            </footer>
-          </>
+          <LayoutPlaceholders page={page} componentMap={componentMap} />
         )}
       </div>
     </>
